@@ -35,6 +35,7 @@ function FileUploadCard({
     const [existingFileUrl] = useState<string | null>(null);
     const [isFetchingFile, setIsFetchingFile] = useState(false);
     const [comments, setComments] = useState<string>('');
+    const [isConfirmed,setIsConfirmed]= useState<boolean>(false);
 
     // Initialize with EditFile data if editing
     // useEffect(() => {
@@ -271,7 +272,7 @@ function FileUploadCard({
         }
     };
 
-    const isSubmitDisabled = !sectionType || (!EditFile && !selectedFile) || !documentName?.trim() || loading || editLoading || isFetchingFile;
+    const isSubmitDisabled = !sectionType || (!EditFile && !selectedFile) || !documentName?.trim() || loading || editLoading || isFetchingFile ||(sectionType === "galley" && !isConfirmed);
 
     return (
         <div className="min-h-screen bg-black/50 flex items-start justify-center p-4 fixed left-0 top-0 max-w-screen w-full h-full z-50">
@@ -298,7 +299,7 @@ function FileUploadCard({
                 {/* Content */}
                 <div className="p-6">
                     {/* Document Name Input */}
-                    {pathname.includes("/files") && (
+                    {sectionType!=="galley" && pathname.includes("/files") && (
                         <div className="mb-2">
                             <label className="block text-sm font-medium text-gray-900 mb-2">
                                 Document Name <span className="text-red-500">*</span>
@@ -323,10 +324,11 @@ function FileUploadCard({
                             <textarea
                                 value={comments}
                                 onChange={(e) => setComments(e.target.value)}
-                                placeholder="Enter Correcctions"
+                                placeholder="Enter Corrections"
+                                required
                                 rows={1}
                                 className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-(--journal-500) focus:border-transparent"
-                                required
+                                
                             />
                         </div>
                     )}
@@ -409,6 +411,23 @@ function FileUploadCard({
                             </div>
                         </div>
                     </div>
+                    {sectionType==="galley" &&(
+                        <div className="mb-2 ml-4  ">
+                             {/* <label className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"></label> */}
+                           <div className="flex justify-center gap-3">
+                             <input className="w-4 h-6"
+                             type="checkbox"
+                             checked={isConfirmed}
+                            required
+                             onChange={(e)=>setIsConfirmed(e.target.checked)}
+                             />
+                             <span className="text-sm font-xl text-gray-700 mb-2">
+                                  I confirm that only minor corrections (typographical/formatting) are made.
+                             </span>
+                             </div>
+                            
+                        </div>
+                    )}
 
                     {/* Action Buttons */}
                     <div className="flex gap-3 justify-end">

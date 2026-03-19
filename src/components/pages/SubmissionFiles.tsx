@@ -365,28 +365,30 @@ const SubmissionFiles: React.FC = () => {
                                                                     setGalleyCard(true);
                                                                     setSelectedGalleyFile(doc);
                                                                 }}
-                                                                className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                                                className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg  transition-colors"
                                                             >
-                                                                <Upload className="w-4 h-4 text-gray-600" />
+                                                                <Upload className="w-4 h-4 text-gray-600 " />
+                                                                Upload file
                                                             </button>
 
-                                                            <span className="absolute -top-10 text-sm px-3 py-2 bg-blue-50 shadow rounded-md text-nowrap opacity-0 group-hover:opacity-100 transition pointer-events-none">
+                                                            {/* <span className="absolute -top-10 text-sm px-3 py-2 bg-blue-50 shadow rounded-md text-nowrap opacity-0 group-hover:opacity-100 transition pointer-events-none">
                                                                 Re-Upload
-                                                            </span>
+                                                            </span> */}
                                                         </span>
 
 
                                                         <span className="relative flex items-center justify-center group">
                                                             <button
                                                                 onClick={() => handleVerify(documents_table4[0].id)}
-                                                                className="p-2 border border-green-300 rounded-lg hover:bg-green-50 transition-colors"
+                                                                className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg  transition-colors"
                                                             >
                                                                 <Check className="w-4 h-4 text-green-600" />
+                                                                Verify
                                                             </button>
 
-                                                            <span className="absolute -top-10 text-sm px-3 py-2 bg-blue-50 shadow rounded-md text-nowrap opacity-0 group-hover:opacity-100 transition pointer-events-none">
-                                                                Accept Changes
-                                                            </span>
+                                                            {/* <span className="absolute -top-10 text-sm px-3 py-2 bg-blue-50 shadow rounded-md text-nowrap opacity-0 group-hover:opacity-100 transition pointer-events-none">
+                                                                U
+                                                            </span> */}
                                                         </span>
 
                                                     </div>
