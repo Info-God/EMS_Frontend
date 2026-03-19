@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  /* IJIRE — Deep Tech Blue */
+  --color-ijire-500: oklch(68% 0.23 262);
+  --color-ijire-600: oklch(54.6% 0.245 262.9);
+  --color-ijire-700: oklch(42% 0.22 263);
+
+  /* IJSREAT — Scientific Cyan */
+  --color-ijsreat-500: oklch(74% 0.14 215);
+  --color-ijsreat-600: oklch(62% 0.16 215);
+  --color-ijsreat-700: oklch(48% 0.15 215);
+
+  /* IJRTMR — Muted Steel Blue */
+  --color-ijrtmr-500: oklch(70% 0.08 210);
+  --color-ijrtmr-600: oklch(56% 0.09 210);
+  --color-ijrtmr-700: oklch(42% 0.08 210);
+
+  /* INDJEEE — Electrical Green */
+  --color-indjeee-500: oklch(72% 0.16 145);
+  --color-indjeee-600: oklch(60% 0.18 145);
+  --color-indjeee-700: oklch(46% 0.16 145);
+
+  /* INDJECE — Electronics Magenta */
+  --color-indjece-500: oklch(70% 0.26 350);
+  --color-indjece-600: oklch(58% 0.28 350);
+  --color-indjece-700: oklch(44% 0.25 350);
+
+  /* INDJCST — Warm Copper / CS Theme */
+  --color-indjcst-500: oklch(72% 0.14 70);
+  --color-indjcst-600: oklch(60% 0.16 70);
+  --color-indjcst-700: oklch(46% 0.15 70);
+
+  /* INDJCMR — Clinical & Medical Research */
+  --color-indjcmr-500: oklch(70% 0.18 295);
+  --color-indjcmr-600: oklch(58% 0.2 295);
+  --color-indjcmr-700: oklch(44% 0.18 295);
+
+  /*
+     INDJCPR — Clinical Pharmacy Research Pharma Violet / Drug Science */
+  --color-indjcpr-500: oklch(72% 0.11 195);
+  --color-indjcpr-600: oklch(60% 0.13 195);
+  --color-indjcpr-700: oklch(46% 0.12 195);
+}
+
+button {
+  cursor: pointer;
+}
