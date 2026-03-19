@@ -300,7 +300,7 @@ const SubmissionFiles: React.FC = () => {
                 UploadCardToggle={setUploadCard}
                 sectionType={"galley"}
             />} */}
-                <h1 className="text-2xl font-semibold text-gray-900 mt-6">Galley Correction</h1>
+                <h2 className="text-xl font-semibold text-gray-900 mt-6">Galley Correction</h2>
                 <div className="bg-white rounded-lg shadow-sm mt-8">
 
                     {/* Desktop Table View */}
@@ -365,10 +365,10 @@ const SubmissionFiles: React.FC = () => {
                                                                     setGalleyCard(true);
                                                                     setSelectedGalleyFile(doc);
                                                                 }}
-                                                                className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg  transition-colors"
+                                                                className="flex items-center gap-2 p-2 border border-gray-300 rounded-lg transition-colors"
                                                             >
                                                                 <Upload className="w-4 h-4 text-gray-600 " />
-                                                                Upload file
+                                                                Re-Upload file
                                                             </button>
 
                                                             {/* <span className="absolute -top-10 text-sm px-3 py-2 bg-blue-50 shadow rounded-md text-nowrap opacity-0 group-hover:opacity-100 transition pointer-events-none">
@@ -380,7 +380,7 @@ const SubmissionFiles: React.FC = () => {
                                                         <span className="relative flex items-center justify-center group">
                                                             <button
                                                                 onClick={() => handleVerify(documents_table4[0].id)}
-                                                                className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg  transition-colors"
+                                                                className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg border border-gray-300  transition-colors"
                                                             >
                                                                 <Check className="w-4 h-4 text-green-600" />
                                                                 Verify
@@ -422,7 +422,7 @@ const SubmissionFiles: React.FC = () => {
 
                 {/* Certificate Details */}
                 <div className="mt-12">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Certificate Details</h2>
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Certificate Details & Similarity Report (Optional)</h2>
                     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                         {/* Desktop Table */}
                         <div className="hidden md:block">
