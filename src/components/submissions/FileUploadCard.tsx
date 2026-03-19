@@ -216,8 +216,8 @@ function FileUploadCard({
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            const validTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-            if (!validTypes.includes(file.type) || !file.name.match(/\.(doc|docx)$/i)) {
+            const validTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/pdf'];
+            if (!validTypes.includes(file.type) || !file.name.match(/\.(doc|docx|pdf)$/i)) {
                 toast.error("Only Word Documents(.doc,.docx) are accepted");
                 return;
             }
@@ -364,7 +364,7 @@ function FileUploadCard({
                                 id="file-upload"
                                 className="hidden"
                                 onChange={handleFileSelect}
-                                accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                accept=".doc,.docx,.pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"
                             />
                             <div className="flex flex-col items-center">
                                 <div className="w-16 h-16 mb-4 text-gray-400">

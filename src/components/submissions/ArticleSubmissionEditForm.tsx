@@ -135,8 +135,8 @@ const ArticleSubmissionEditForm: React.FC = () => {
 
     if (selectedFile) {
       // Validate file type
-      const validTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-      if (!validTypes.includes(selectedFile.type) && !selectedFile.name.match(/\.(doc|docx)$/i)) {
+      const validTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/pdf'];
+      if (!validTypes.includes(selectedFile.type) && !selectedFile.name.match(/\.(doc|docx|pdf)$/i)) {
         setFileError('Only Word documents (.doc, .docx) are accepted');
         setFile(null);
         return;
