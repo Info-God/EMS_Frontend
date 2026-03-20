@@ -263,7 +263,7 @@ export interface GalleyUploadResponse{
   success:boolean;
   message:string;
   file_id:number;
-
+  file_url:string
 }
 
 export type UploadType = "copyright" | "payment" | "manuscript" | "file" | "final_submission_freeze"|"galley";

@@ -162,7 +162,7 @@ function FileUploadCard({
                         uploaded_by: "Author",
                         verified_by: "proof generated"
                     };
-                    dispatch(addFinalFile({ type: "galley", file: newCorrectedFile }))
+                    dispatch(addFinalFile({ type: "galley", file: newCorrectedFile }));
                 }
                 else {
                     // Update Redux store
@@ -275,7 +275,7 @@ function FileUploadCard({
     const isSubmitDisabled = !sectionType || (!EditFile && !selectedFile) || !documentName?.trim() || loading || editLoading || isFetchingFile ||(sectionType === "galley" && !isConfirmed);
 
     return (
-        <div className="min-h-screen bg-black/50 flex items-start justify-center p-4 fixed left-0 top-0 max-w-screen w-full h-full z-50">
+     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl sm:scale-80">
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -389,7 +389,8 @@ function FileUploadCard({
                     </div>
 
                     {/* File Requirements */}
-                    <div className="hidden sm:block bg-blue-50 rounded-lg p-4 mb-6">
+                    {sectionType!=="galley"&&(
+                        <div className="hidden sm:block bg-blue-50 rounded-lg p-4 mb-6">
                         <div className="flex gap-3">
                             <FileText className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                             <div>
@@ -411,6 +412,40 @@ function FileUploadCard({
                             </div>
                         </div>
                     </div>
+                    )}
+                    {sectionType==="galley"&&(
+                          <div className="hidden sm:block bg-blue-50 rounded-lg p-4 mb-6 ">
+                            <div>
+                              <h3 className="font-semibold text-gray-900 mb-3">🚨Important Editorial Rules</h3>
+                            </div>
+                            <div className='flex gap-3 ml-6'>
+                                <div className='mb-2'>
+                                    <h3 className="font-semibold text-gray-900 -ml-6 mb-3">Only allow:</h3>
+                                <ul className="list-disc space-y-2 text-sm text-gray-700 ml-2">
+                                    <li> Typographical corrections</li>
+                                    <li>Minor formatting updated</li>
+                                    <li>Author Name Spelling Fixes</li>
+                                </ul>
+                                </div>
+                                <div className='ml-20'>
+                                 <h3 className="font-semibold text-gray-900 mb-3 -ml-6 ">Do NOT allow:</h3>
+                                 <ul className="list-disc space-y-2 text-sm text-gray-700 ml-2">
+                                    <li>New data insertion</li>
+                                    <li>Major content changes</li>
+                                    <li>New references</li>
+                                 </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-gray-900 mb-3 mt-2">Submission Deadline</h3>
+                                <ul className=" list-disc space-y-2 text-sm text-gray-700 ml-4">
+                                    <li>Corrections must be submitted within <b>1-5 workingdays</b> </li>
+                                    <li>Delay may result in automatic publication of current proof</li>
+                                </ul>
+                            </div>
+                          </div>
+                         
+                    )}
                     {sectionType==="galley" &&(
                         <div className="mb-2 ml-4  ">
                              {/* <label className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"></label> */}

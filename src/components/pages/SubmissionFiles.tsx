@@ -12,7 +12,7 @@ import LoadingScreen from '../ui/LoadingScreen';
 import { removeFinalFile } from '../../lib/store/features/submission';
 import { verifyGalleyFile } from '../../lib/store/features/submission';
 import { useVerifyCorrection } from '../../hook/useVerifyCorrection';
-
+import type { FileItem } from '../../types';
 
 const SubmissionFiles: React.FC = () => {
     const [UploadCard, setUploadCard] = useState<boolean>(false);
@@ -29,7 +29,7 @@ const SubmissionFiles: React.FC = () => {
     const documents_table4 = useAppSelector((state) => state.article.files_4)
     const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; title: string } | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [selectedGalleyFile, setSelectedGalleyFile] = useState<any>(null);
+    const [selectedGalleyFile, setSelectedGalleyFile] = useState<FileItem | null>(null);
     const { verifyGalleyFile: verifyApi } = useVerifyCorrection();
     const handleDelete = useCallback((id: string, title: string) => {
         setDeleteConfirm({ id, title });
@@ -300,8 +300,8 @@ const SubmissionFiles: React.FC = () => {
                 UploadCardToggle={setUploadCard}
                 sectionType={"galley"}
             />} */}
-                <h2 className="text-xl font-semibold text-gray-900 mt-6">Galley Correction</h2>
-                <div className="bg-white rounded-lg shadow-sm mt-8">
+                <h2 className="text-xl font-semibold text-gray-900 mt-4 ">Galley Correction</h2>
+                <div className="bg-white rounded-lg shadow-sm mt-4">
 
                     {/* Desktop Table View */}
                     <div className="hidden md:block">
@@ -368,7 +368,7 @@ const SubmissionFiles: React.FC = () => {
                                                                 className="flex items-center gap-2 p-2 border border-gray-300 rounded-lg transition-colors"
                                                             >
                                                                 <Upload className="w-4 h-4 text-gray-600 " />
-                                                                Re-Upload file
+                                                                Request Correction
                                                             </button>
 
                                                             {/* <span className="absolute -top-10 text-sm px-3 py-2 bg-blue-50 shadow rounded-md text-nowrap opacity-0 group-hover:opacity-100 transition pointer-events-none">
@@ -403,22 +403,83 @@ const SubmissionFiles: React.FC = () => {
                 </div>
 
                 {/* Mobile Card View */}
-                <div className="md:hidden p-4 space-y-4">
-                    {/* Article Card */}
-                    <div className="bg-white rounded-lg border border-gray-200 p-4">
-                        <div className="flex justify-between items-start mb-4">
-                            <h3 className="text-base font-semibold text-gray-900">Title</h3>
-                            <button onClick={() => handleDownload(article?.file_url ?? "", article?.title ?? "")} className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                                <Download className="w-5 h-5 text-gray-600" />
-                            </button>
+                 <div className="md:hidden bg-white rounded-lg p-4 space-y-4 ">
+                            {ShowComments.state && <div className='comment-box p-4 bg-gray-50 border border-gray-300 rounded-md  fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  z-10 w-[300px] overflow-hidden break-all shadow-2xl'>
+                                    <div className='flex items-center justify-between'>
+                                        <h3 className='text-sm pb-2'>{ShowComments.title}</h3> <button className='text-blue-500 hover:underline' onClick={() => setShowComments({ state: false, title: '', content: '' })}>Close</button>
+                                    </div>
+                                    <p>{ShowComments.content}</p>
+                                </div>}
+                            {documents_table4.map((doc, idx) => {
+                                    const ApprovedIndex = documents_table4.findIndex((s) => s.verified_by === "Final Proof Approved");
+                                    const isDisabled = ApprovedIndex !== -1 && idx <= ApprovedIndex;
+                                    const isThisApproved = doc.verified_by?.toLowerCase() === "Final Proof Approved".toLowerCase();
+                                return (
+                                
+                                <div key={doc.article_id + idx} className="bg-white rounded-lg border border-gray-200 p-4">
+                                    <div>
+                                    <div className="flex justify-between items-start ">
+                                        <h3 className="text-base font-semibold text-gray-900">Title</h3>
+                                       
+                                        <button onClick={() => handleDownload(doc.url ?? "", doc.doc_title)} className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                            <Download className="w-5 h-5 text-gray-600" />
+                                        </button>
+                                    </div>
+                                     <h3 className="text-base font-semibold text-gray-900">{doc.doc_title}</h3>
+                                    </div>
+                                    <p className="text-sm text-gray-400 mt-2 mb-2">Created By</p>
+                                    <p className="text-sm text-gray-900 mb-4">{doc.uploaded_by}</p>
+                                    <div>
+                                        <p className="text-sm text-gray-500 mb-2">Comments</p>
+                                        <h6
+                                         className=" text-sm text-gray-900 ">{doc.comments && doc.comments?.length > 10 ?
+                                                <div>
+                                                    <p>{doc.comments?.slice(0, 25)}...</p>
+                                                    <button className='mt-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors ' onClick={() =>
+                                                        setShowComments({ state: !ShowComments.state, title: doc.doc_title, content: doc.comments?.trim() ?? '' })}>
+                                                        <Eye className='w-4 h-4 text-gray-600 ' />
+                                                    </button>
+                                                </div> : doc.comments}
+                                            </h6>
+                                    </div>
+
+                                    <div className='flex items center'>
+                                        
+                                        {documents_table4.length <= 1 && !isThisApproved && !isDisabled && (
+                                                    <div className="py-4  flex items-center gap-5">
+
+                                                        <span className="relative flex items-center justify-center group">
+                                                            <button
+                                                                onClick={() => {
+                                                                    setGalleyCard(true);
+                                                                    setSelectedGalleyFile(doc);
+                                                                }}
+                                                                className="flex items-center gap-2 p-2 border border-gray-300 rounded-lg transition-colors"
+                                                            >
+                                                                <Upload className="w-4 h-4 text-gray-600 " />
+                                                                Request Correction
+                                                            </button>
+                                                        </span>
+
+
+                                                        <span className="relative flex items-center justify-center group">
+                                                            <button
+                                                                onClick={() => handleVerify(documents_table4[0].id)}
+                                                                className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg border border-gray-300  transition-colors"
+                                                            >
+                                                                <Check className="w-4 h-4 text-green-600" />
+                                                                Verify
+                                                            </button>
+                                                        </span>
+
+                                                    </div>
+                                                )}</div>
+                                </div>
+                                  
+
+                           );
+                           } )}
                         </div>
-                        <p className="text-sm text-gray-900 mb-4">{article?.title}</p>
-                        <div>
-                            <p className="text-sm text-gray-500">Created at</p>
-                            <p className="text-sm text-gray-900">{article?.created_at}</p>
-                        </div>
-                    </div>
-                </div>
 
                 {/* Certificate Details */}
                 <div className="mt-12">
