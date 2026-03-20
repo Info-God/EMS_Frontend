@@ -38,6 +38,9 @@ export const OnboardingCard = ({ icon: Icon, title, description, iconBg, iconCol
     const handleClose = () => {
         dispatch(setTutorialStep(tutorialStep + 1))
         dispatch(setBackground(false))
+        if (hideHandler) {
+            hideHandler(false)
+        }
         localStorage.setItem("step", (tutorialStep + 1).toString())
     }
     const handleSkip = () => {
@@ -149,4 +152,3 @@ export const OnboardingCard = ({ icon: Icon, title, description, iconBg, iconCol
         </div>
     );
 };
-
