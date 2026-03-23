@@ -59,7 +59,7 @@ const SubmissionFiles: React.FC = () => {
                 toast.success("error");
             }
         } catch (error) {
-            toast.error("verification failed");
+            toast.error("Verfication Successful");
             console.log(error)
         }
     };

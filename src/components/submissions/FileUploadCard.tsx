@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { X, FileText } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../lib/store/store';
-import { addFinalFile, updateFile } from '../../lib/store/features/submission';
+// import { addFinalFile, updateFile } from '../../lib/store/features/submission';
 import type { FileItem, UploadType } from '../../types';
 import { useEditFinalSubmission, useFinalSubmission } from '../../hook/useFinalSubmission';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 import { setFrizee } from '../../lib/store/features/globle';
+import { useArticleDetails } from '../../hook/useArticleDetails';
 
 function FileUploadCard({
     UploadCardToggle,
@@ -27,6 +28,7 @@ function FileUploadCard({
     const { editFinalDocument, data: editData, error: editErr, loading: editLoading } = useEditFinalSubmission();
     const { id: article_id } = useAppSelector((state) => state.article.article!);
     const dispatch = useAppDispatch();
+    const { fetchArticleDetails } = useArticleDetails();
 
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -126,12 +128,12 @@ function FileUploadCard({
                 }
 
                 // Prepare updated file item for Redux
-                const updatedFileItem: FileItem = {
-                    ...EditFile,
-                    doc_title: documentName,
-                    file_url: selectedFile ? URL.createObjectURL(selectedFile) : existingFileUrl || EditFile.file_url,
-                    freeze_data: 0
-                };
+                // const updatedFileItem: FileItem = {
+                //     ...EditFile,
+                //     doc_title: documentName,
+                //     file_url: selectedFile ? URL.createObjectURL(selectedFile) : existingFileUrl || EditFile.file_url,
+                //     freeze_data: 0
+                // };
 
                 // Call API to edit with the file
                 await editFinalDocument({
@@ -147,27 +149,30 @@ function FileUploadCard({
 
 
                 setIsEdited?.(true);
-                toast.success(`${documentName} updated successfully`);
-                if (sectionType === "galley") {
-                    const newCorrectedFile: FileItem = {
-                        id: parseInt(Date.now().toString().slice(9)),
-                        article_id: article_id,
-                        doc_title: documentName,
-                        file_path: selectedFile?.name || '',
-                        comments: comments || '',
-                        create_at: new Date().toISOString(),
-                        category: 4,
-                        file_url: selectedFile ? URL.createObjectURL(selectedFile) : '',
-                        freeze_data: 0,
-                        uploaded_by: "Author",
-                        verified_by: "proof generated"
-                    };
-                    dispatch(addFinalFile({ type: "galley", file: newCorrectedFile }));
-                }
-                else {
-                    // Update Redux store
-                    dispatch(updateFile({ type: sectionType, file: updatedFileItem }));
-                }
+                // toast.success(`${documentName} updated successfully`);
+                
+                await fetchArticleDetails(article_id);
+
+                // if (sectionType === "galley") {
+                //     const newCorrectedFile: FileItem = {
+                //         id: parseInt(Date.now().toString().slice(9)),
+                //         article_id: article_id,
+                //         doc_title: "Galley Corrected File",
+                //         file_path: selectedFile?.name || '',
+                //         comments: comments || '',
+                //         create_at: new Date().toISOString(),
+                //         category: 4,
+                //         file_url: selectedFile ? URL.createObjectURL(selectedFile) : '',
+                //         freeze_data: 0,
+                //         uploaded_by: "Author",
+                //         verified_by: "Under Editor Verification"
+                //     };
+                //     dispatch(addFinalFile({ type: "galley", file: newCorrectedFile }));
+                // }
+                // else {
+                //     // Update Redux store
+                //     dispatch(updateFile({ type: sectionType, file: updatedFileItem }));
+                // }
 
             } else {
                 // NEW UPLOAD MODE
@@ -177,16 +182,16 @@ function FileUploadCard({
                 }
 
                 // Create new file item
-                const newFileItem: FileItem = {
-                    id: parseInt(Date.now().toString().slice(9)), // temporary id
-                    article_id: article_id,
-                    doc_title: documentName,
-                    file_path: selectedFile.name,
-                    create_at: new Date().toISOString(),
-                    category: sectionType === "galley" ? 4 : 0,
-                    file_url: URL.createObjectURL(selectedFile), // temporary URL
-                    freeze_data: 0
-                };
+                // const newFileItem: FileItem = {
+                //     id: parseInt(Date.now().toString().slice(9)), // temporary id
+                //     article_id: article_id,
+                //     doc_title: documentName,
+                //     file_path: selectedFile.name,
+                //     create_at: new Date().toISOString(),
+                //     category: sectionType === "galley" ? 4 : 0,
+                //     file_url: URL.createObjectURL(selectedFile), // temporary URL
+                //     freeze_data: 0
+                // };
 
                 // Call API to upload
                 await uploadFinalDocument({
@@ -197,11 +202,13 @@ function FileUploadCard({
                     comments: sectionType === "galley" ? comments : undefined,
                     galley_file_id: (EditFile as any)?.id
                 });
+                
 
                 setIsEdited?.(false);
-                toast.success(`${documentName} uploaded successfully`);
+                // toast.success(`${documentName} uploaded successfully`);
+                 await fetchArticleDetails(article_id);
                 // Add to Redux store immediately for optimistic UI
-                dispatch(addFinalFile({ type: sectionType, file: newFileItem }));
+                // dispatch(addFinalFile({ type: sectionType, file: newFileItem }));
             }
 
             // Close modal
