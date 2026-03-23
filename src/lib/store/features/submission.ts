@@ -180,7 +180,7 @@ export const articleSlice = createSlice({
           (file: FileItem) => file.id === id
         );
         if (fileIndex !== -1) {
-          state.files_4[fileIndex].verified_by = "Final proof approved";
+          state.files_4[fileIndex].verified_by = "Final Proof Approved";
         }
       }
     },

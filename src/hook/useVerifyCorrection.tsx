@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import axiosClient from "../lib/axios-client";
 
 interface VerifyCorrectionResponse {
-  status: boolean;
+  success: boolean;
   message: string;
 }
 

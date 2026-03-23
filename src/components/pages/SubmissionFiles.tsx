@@ -13,6 +13,7 @@ import { removeFinalFile } from '../../lib/store/features/submission';
 import { verifyGalleyFile } from '../../lib/store/features/submission';
 import { useVerifyCorrection } from '../../hook/useVerifyCorrection';
 import type { FileItem } from '../../types';
+import { useArticleDetails } from '../../hook/useArticleDetails';
 
 const SubmissionFiles: React.FC = () => {
     const [UploadCard, setUploadCard] = useState<boolean>(false);
@@ -23,6 +24,9 @@ const SubmissionFiles: React.FC = () => {
     const { deleteDocument, error, success, loading } = useDeleteDocument()
     const { article } = useAppSelector((state) => state.article);
     const documents_table0 = useAppSelector((state) => state.article.files_0);
+    //  const { id: article_id } = useAppSelector((state) => state.article.article!);
+    
+    const article_id = article?.id;
     // const documents_table1 = useAppSelector((state) => state.article.files_1);
     const documents_table2 = useAppSelector((state) => state.article.files_2);
     const documents_table3 = useAppSelector((state) => state.article.files_3);
@@ -30,6 +34,7 @@ const SubmissionFiles: React.FC = () => {
     const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; title: string } | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
     const [selectedGalleyFile, setSelectedGalleyFile] = useState<FileItem | null>(null);
+    const { fetchArticleDetails } = useArticleDetails();
     const { verifyGalleyFile: verifyApi } = useVerifyCorrection();
     const handleDelete = useCallback((id: string, title: string) => {
         setDeleteConfirm({ id, title });
@@ -50,19 +55,23 @@ const SubmissionFiles: React.FC = () => {
 
 
     // for veryfying api
-    const handleVerify = async (file_id: number) => {
+   const handleVerify = async (file_id: number) => {
+    try {
         dispatch(verifyGalleyFile({ id: file_id }));
-        try {
-            const response = await verifyApi(file_id);
-            if (response.status) {
-                // dispatch(verifyGalleyFile({ id: file_id }));
-                toast.success("error");
-            }
-        } catch (error) {
-            toast.error("Verfication Successful");
-            console.log(error)
+        const response = await verifyApi(file_id);
+        if (response.success === true) {
+            // dispatch(verifyGalleyFile({ id: file_id }));
+            if (article_id) {
+                await fetchArticleDetails(article_id);
+            }  
+            toast.success("Verification Successful");
+        } else {
+            toast.error(response.message || "Verification failed");
         }
-    };
+    } catch (error: any) {
+        toast.error(error?.response?.data?.message || "Error Verifying file");
+    }
+};
     const colorChange = (status: string) => {
         switch (status) {
             case "Proof Generated":
@@ -379,7 +388,7 @@ const SubmissionFiles: React.FC = () => {
 
                                                         <span className="relative flex items-center justify-center group">
                                                             <button
-                                                                onClick={() => handleVerify(documents_table4[0].id)}
+                                                                onClick={() => handleVerify(doc.id)}
                                                                 className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg border border-gray-300  transition-colors"
                                                             >
                                                                 <Check className="w-4 h-4 text-green-600" />
