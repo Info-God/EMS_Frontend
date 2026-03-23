@@ -6,16 +6,19 @@ import { Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAppSelector } from "../../lib/store/store";
 import PhoneInput from 'react-phone-input-2';
+import type { CountryData } from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
 const Register = () => {
   const navigate = useNavigate();
   const { register, data, loading, error } = useRegister();
   const { active } = useAppSelector(s => s.journal)
-  const [prefix, handlePrefix] = useState<string>("")
+  // const [phoneInputValue, setPhoneInputValue] = useState("");
+  const [prefixInputValue, setPrefixInputValue] = useState("+91");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    prefix: prefixInputValue,
     phone: "",
     password: "",
     password_confirmation: "",
@@ -27,9 +30,6 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  /* ---------------------------------
-     Field-level validation
-  --------------------------------- */
   const validateField = (name: string, value: string): string => {
     switch (name) {
       case "name":
@@ -43,7 +43,7 @@ const Register = () => {
 
       case "phone":
         if (!value.trim()) return "Mobile number is required";
-        if (value.length<10 || 15<value.length)
+        if (value.length !== 10)
           return "Enter a valid 10-digit mobile number";
         return "";
 
@@ -64,9 +64,40 @@ const Register = () => {
     }
   };
 
-  const handleNumberChange = (value:string)=>{
-    handlePrefix(value)
-    setFormData(prev=> ({...prev, phone:prefix}))
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+    // console.log(prefixInputValue)
+    setFormData(prev => ({
+      ...prev,
+      phone: value,
+    }));
+
+    if (touched.phone) {
+      setErrors(prev => ({
+        ...prev,
+        phone: validateField("phone", value),
+      }));
+    }
+  };
+
+  const handlePrefixChange = (_:string, data: CountryData) => {
+    // console.log(data, formData, prefixInputValue)
+    const dialCode = 'dialCode' in data ? data.dialCode : prefixInputValue;
+
+    setPrefixInputValue(dialCode);
+
+    setFormData(prev => ({
+      ...prev,
+      prefix: dialCode ? `+${dialCode}` : prefixInputValue,
+    }));
+  };
+
+  const handlePhoneBlur = () => {
+    setTouched(prev => ({ ...prev, phone: true }));
+    setErrors(prev => ({
+      ...prev,
+      phone: validateField("phone", formData.phone),
+    }));
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,6 +141,7 @@ const Register = () => {
     e.preventDefault();
     if (!validateForm()) return;
     if (!active) return
+    // console.log(formData)
     try {
       const res = await register({
         name: formData.name,
@@ -118,7 +150,7 @@ const Register = () => {
         password_confirmation: formData.password_confirmation,
         user_type: "W",
         journal_id: active.id,
-        phone: formData.phone,
+        phone: `${formData.prefix} ${formData.phone}`,
       });
 
       if (res?.status === "success") {
@@ -184,14 +216,32 @@ const Register = () => {
 
         {/* Phone */}
         <div className="flex items-center gap-3">
-          <PhoneInput          
-            country="us"
-            value={prefix}
-            onChange={handleNumberChange}
-            onBlur={handleBlur}
-            inputClass="min-w-full min-h-10"
-            placeholder="Enter Mobile No"
-          />
+          <div className="flex items-center gap-3">
+            {/* Prefix */}
+            <PhoneInput
+              country="in"
+              value={prefixInputValue}
+              onChange={handlePrefixChange}
+              inputClass="!w-[120px] !h-10"
+              buttonClass="!h-10"
+              containerClass="!w-[120px]"
+              inputProps={{
+                name: "prefix",
+                required: true,
+              }}
+            />
+
+            {/* Phone Number */}
+            <input
+              name="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={handlePhoneChange}
+              onBlur={handlePhoneBlur}
+              className={`${inputClass("phone")} flex-1`}
+              placeholder="Enter Mobile No"
+            />
+          </div>
 
           {/* <input
             name="phone"

@@ -22,6 +22,7 @@ export const useRegister = () => {
       localStorage.setItem("user_id", response.data.user.id.toString());
       localStorage.setItem("token", fullToken);
       localStorage.removeItem("tutorialCompleted");
+      localStorage.removeItem("ProfileTutorial");
       return response.data;
     } catch (err: any) {
       setError(
