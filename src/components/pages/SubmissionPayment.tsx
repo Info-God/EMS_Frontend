@@ -110,7 +110,7 @@ const SubmissionPayment: React.FC = () => {
     {
       id: "paid-3",
       title: "For Foreign Author",
-      price: payment?.prices?.Others?.withdoi,
+      price: payment?.prices?.Others?.withdoi??'not set',
       currency: "USD",
       features: [
         "With DOI (10.59256)",
@@ -135,7 +135,7 @@ const SubmissionPayment: React.FC = () => {
   const cardsToRender =
     visibleCards.length > 0
       ? visibleCards
-      : pricingMatrix.filter(card => card.enabled);
+      : pricingMatrix;
 
   return (
     <div className="min-h-screen pr-4 lg:p-8">
