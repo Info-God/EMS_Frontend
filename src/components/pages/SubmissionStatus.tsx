@@ -32,9 +32,13 @@ const SubmissionStatus: React.FC = () => {
   const [sectionType, setSectionType] = useState<UploadType>('manuscript');
   const [isEdited, setIsEdited] = useState<boolean>(article?.freeze_data ? true : false);
 
-  useEffect(()=>{
-    dispatch(setFrizee(isEdited))
-  },[isEdited])
+  useEffect(() => {
+    setIsEdited(Boolean(article?.freeze_data));
+  }, [article?.freeze_data]);
+
+  useEffect(() => {
+    dispatch(setFrizee(isEdited));
+  }, [isEdited, dispatch]);
 
   const {fetchArticleDetails} = useArticleDetails()
   const { frizeFinalDocument, loading } = useFrizeFinalSubmission();
@@ -52,14 +56,22 @@ const SubmissionStatus: React.FC = () => {
 
   const handleSubmitFinal = async () => {
     try {
+      if (!article_id) {
+        toast.error("No article selected. Please open the article details and try again.");
+        return;
+      }
+      const validating_id = typeof article_id === 'number' ? article_id.toString() : article_id;
 
-      frizeFinalDocument(article_id.toString())
-      // refetch
-      fetchArticleDetails(article_id)
-
+      const res = await frizeFinalDocument(validating_id);
+      if (!res) {
+        toast.error("Final submission failed. Please try again.");
+        return;
+      }
+      await fetchArticleDetails(article_id);
+      setIsEdited(true);
+      dispatch(setFrizee(true));
 
       toast.success("All final documents submitted successfully.");
-      setIsEdited(true)
     }
     catch (err) {
       toast.error("Final submission failed.");
@@ -440,7 +452,7 @@ const SubmissionStatus: React.FC = () => {
 
       <button
         onClick={handleSubmitFinal}
-        disabled={Frizee}
+        disabled={Frizee || loading}
         className="flex items-center gap-2 px-6 py-3 bg-(--journal-600) text-white rounded-lg hover:bg-(--journal-700) transition-colors text-sm font-medium mx-auto mt-5 disabled:bg-gray-400"
       >
         <Send className="w-4 h-4" />

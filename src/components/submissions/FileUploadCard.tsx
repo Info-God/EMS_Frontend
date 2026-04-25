@@ -51,14 +51,16 @@ function FileUploadCard({
     useEffect(() => {
         if (data?.message) {
             toast.success(data.message);
-            dispatch(setFrizee(true))
+            dispatch(setFrizee(false));
+            setIsEdited?.(false);
         }
     }, [data, dispatch]);
 
     useEffect(() => {
         if (editData?.message) {
             toast.success(editData.message);
-            dispatch(setFrizee(true))
+            dispatch(setFrizee(false));
+            setIsEdited?.(false);
         }
     }, [editData, dispatch]);
 
@@ -147,8 +149,7 @@ function FileUploadCard({
 
                 });
 
-
-                setIsEdited?.(true);
+                setIsEdited?.(false);
                 // toast.success(`${documentName} updated successfully`);
                 
                 await fetchArticleDetails(article_id);
