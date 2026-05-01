@@ -33,9 +33,11 @@ const ArticleSubmissionEditForm: React.FC = () => {
 
   useEffect(()=>{
     if (article_error) toast.error(article_error)
-    if (prelistError) toast.error(article_error)
+  },[article_error])
 
-  },[article_error, prelistError])
+  useEffect(()=>{
+    if (prelistError) toast.error(prelistError)
+  },[prelistError])
   useEffect(() => {
     if (url_id) {
       fetchArticleDetails(parseInt(url_id));

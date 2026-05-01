@@ -64,7 +64,7 @@ export interface Article {
   category_id: number;
   writer_id: number;
   doi_link:string|null;
-  reviewer_id: number | null;
+  reviewer_id: String | null;
   title: string;
   description: string;
   image_path: string;
@@ -102,6 +102,7 @@ export interface Article {
   file_url: string;
   comments?:string;
   verified_by?:string;
+  research_area:string;
 }
 
 export interface Task {

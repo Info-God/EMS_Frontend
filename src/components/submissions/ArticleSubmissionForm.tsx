@@ -31,6 +31,13 @@ const ArticleSubmissionForm: React.FC = () => {
   }, [prelistData, error])
 
   useEffect(() => {
+    if (prelistError) {
+      toast.error(prelistError)
+    }
+  }, [prelistError])
+
+
+  useEffect(() => {
     const getCountries = async () => {
       const data = await fetchCountryApi();
       if (data) {
@@ -78,7 +85,8 @@ const ArticleSubmissionForm: React.FC = () => {
   // ];
 
 
-  console.log(formData)
+  // console.log(formData)
+
 
   const toggleCheckbox = (id: number) => {
     setChecklist(checklist.map(item =>
@@ -261,9 +269,8 @@ const ArticleSubmissionForm: React.FC = () => {
   }
 
   // Show error if prelist data failed to load
-  if (prelistError) {
-    toast.error(prelistError)
-  }
+
+
 
   return (
     <div className="min-h-screen py-8">

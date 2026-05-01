@@ -100,6 +100,16 @@ const ArticleInformationDashboard: React.FC = () => {
                   <span className="text-gray-700 text-sm">{article?.scheduled_on ?? "N/A"}</span>
                 </div>
               </div>
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm text-gray-500 mb-2">Country</label>
+                  <span className="text-gray-700 text-sm font-medium">{article?.country ?? "N/A"}</span>
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-500 mb-2">Research Area</label>
+                  <span className="text-gray-700 text-sm font-medium">{article?.research_area ?? "N/A"}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
