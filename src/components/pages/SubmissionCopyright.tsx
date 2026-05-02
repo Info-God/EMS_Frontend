@@ -3,33 +3,48 @@ import { Download } from 'lucide-react';
 import { useAppSelector } from '../../lib/store/store';
 import { handleDownload } from '../../utils/utility';
 import { useFetchCopyrightForm } from '../../hook/useCopyrightForm_download';
-
+import toast from 'react-hot-toast';
 
 
 const SubmissionCopyright: React.FC = () => {
   const copyrightForms = useAppSelector((state) => state.article.copy_right_files);
   const { article, journalShortWithId } = useAppSelector((state) => state.article);
-  const { fetchCopyrightForm } = useFetchCopyrightForm();
+  const { fetchCopyrightForm} = useFetchCopyrightForm();
 
   const handleDownloadCopyrightLetter = async () => {
     if (article?.id) {
+      const downloadTask = async () => {
+        const res = await fetchCopyrightForm(article?.id.toString());
+        if (!res) throw new Error("Failed to generate copyright form");
 
-      const blob = await fetchCopyrightForm(article?.id.toString());
-      //->console.log(blob)
-      if (!blob) return;
+        if (!(res instanceof Blob)) {
+          if (res.status === false) {
+            throw new Error("Please Update Your Profile ( Go to profile → update address )");
+          }
+          throw new Error("Failed to generate copyright form");
+        }
 
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "Copyright_Form.pdf";
-      a.click();
-      window.URL.revokeObjectURL(url);
+        const blob = res;
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Copyright_Form.pdf";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      };
+
+      toast.promise(downloadTask(), {
+        loading: "Generating copyright form...",
+        success: "Copyright form downloaded",
+        error: (err) => err.message,
+      });
     };
   }
 
 
   return (
     <div className="min-h-screen pr-4 lg:pr-0">
+      
       <div className="w-full hidden md:block">
         {copyrightForms.length ? <div className="bg-white rounded-lg shadow-sm overflow-hidden p-8">
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">Generate the Copyright Form</h2>
