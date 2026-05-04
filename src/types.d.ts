@@ -35,7 +35,7 @@ interface SubmissionPayload {
   article_type: number;
   issue_type: number;
   processing_type: number;
-  ref_id: number;
+  ref_id: string;
   details: string;
   country: string;
 }
@@ -64,7 +64,7 @@ export interface Article {
   category_id: number;
   writer_id: number;
   doi_link:string|null;
-  reviewer_id: String | null;
+  reviewer_id: number| null;
   title: string;
   description: string;
   image_path: string;
